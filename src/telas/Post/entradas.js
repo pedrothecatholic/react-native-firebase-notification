@@ -7,12 +7,12 @@ export const entradas = [
   {
     id: '2',
     name: 'fonte',
-    label: 'Fonte',
+    label: 'Fonte'
   },
   {
     id: '3',
     name: 'descricao',
     label: 'Descrição',
-    multiline: true,
-  },
-]
+    multiline: true
+  }
+];
