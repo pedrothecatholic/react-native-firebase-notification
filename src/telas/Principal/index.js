@@ -1,5 +1,6 @@
 import { View, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
+import messaging from '@react-native-firebase/messaging';
 import { Cabecalho } from '../../componentes/Cabecalho';
 import { CartaoInfo } from '../../componentes/CartaoInfo';
 import { NovoPostBotao } from '../../componentes/NovoPostBotao';
@@ -11,8 +12,32 @@ export default function Principal({ navigation }) {
   const [posts, setPosts] = useState([]);
   const [notifications, setNotifications] = useState([]);
 
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  }
+
+  async function pegarToken() {
+    const token = await messaging().getToken();
+    console.log(token);
+  }
+
   useEffect(() => {
     pegarPostsTempoReal(setPosts);
+
+    requestUserPermission();
+
+    pegarToken();
+
+    messaging().onMessage((mensagem) => {
+      console.log(mensagem);
+    });
   }, []);
 
   function mostrarNotificacoes() {
