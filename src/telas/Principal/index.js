@@ -1,12 +1,13 @@
 import { View, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
-import messaging from '@react-native-firebase/messaging';
 import { Cabecalho } from '../../componentes/Cabecalho';
 import { CartaoInfo } from '../../componentes/CartaoInfo';
 import { NovoPostBotao } from '../../componentes/NovoPostBotao';
-import { pegarPostsTempoReal } from '../../servicos/firestore';
+import { pegarPostsTempoReal, salvarToken } from '../../servicos/firestore';
 import estilos from './estilos';
 import { logout } from '../../servicos/auth';
+import messaging from '@react-native-firebase/messaging';
+import { auth } from '../../config/firebase';
 
 export default function Principal({ navigation }) {
   const [posts, setPosts] = useState([]);
@@ -25,6 +26,12 @@ export default function Principal({ navigation }) {
 
   async function pegarToken() {
     const token = await messaging().getToken();
+    const userId = auth.currentUser.uid;
+
+    await salvarToken({
+      userId: userId,
+      token: token
+    });
     console.log(token);
   }
 
@@ -35,7 +42,7 @@ export default function Principal({ navigation }) {
 
     pegarToken();
 
-    messaging().onMessage((mensagem) => {
+    messaging().onMessage(async (mensagem) => {
       console.log(mensagem);
     });
   }, []);
