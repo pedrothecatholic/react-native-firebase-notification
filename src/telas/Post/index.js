@@ -8,7 +8,7 @@ import {
   Image
 } from 'react-native';
 import {
-  salvarPost,
+  salvarPost as salvarDados,
   atualizarPost,
   deletarPost
 } from '../../servicos/firestore';
@@ -50,7 +50,7 @@ export default function Post({ navigation, route }) {
       return navigation.goBack();
     }
 
-    const idPost = await salvarPost({
+    const idPost = await salvarDados('posts', {
       ...post,
       imagemUrl: imagem ? '' : null
     });
@@ -94,7 +94,7 @@ export default function Post({ navigation, route }) {
         <IconeClicavel
           exibir={!!item}
           onPress={excluirPostCompleto}
-          iconeNome='trash-2'
+          iconeNome="trash-2"
         />
       </View>
       <ScrollView style={{ width: '100%' }}>
@@ -118,7 +118,8 @@ export default function Post({ navigation, route }) {
 
         <TouchableOpacity
           style={estilos.imagem}
-          onPress={() => setMostrarMenu(true)}>
+          onPress={() => setMostrarMenu(true)}
+        >
           <Image
             source={imagem ? { uri: imagem } : uploadImagemPadrao}
             style={estilos.imagem}
@@ -129,16 +130,19 @@ export default function Post({ navigation, route }) {
       <TouchableOpacity
         style={estilos.botao}
         onPress={salvar}
-        disabled={desabilitarEnvio}>
+        disabled={desabilitarEnvio}
+      >
         <Text style={estilos.textoBotao}>Salvar</Text>
       </TouchableOpacity>
 
       <MenuSelecaoInferior
         setMostrarMenu={setMostrarMenu}
-        mostrarMenu={mostrarMenu}>
+        mostrarMenu={mostrarMenu}
+      >
         <TouchableOpacity
           style={estilos.opcao}
-          onPress={() => escolherImagemDaGaleria(setImagem)}>
+          onPress={() => escolherImagemDaGaleria(setImagem)}
+        >
           <Text>Adicionar foto</Text>
           <Text> &#128247;</Text>
         </TouchableOpacity>
